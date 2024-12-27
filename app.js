@@ -1,26 +1,35 @@
 import express, { json, urlencoded } from "express";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
-
 import indexRouter from "./routes/index.js";
-import usersRouter from "./routes/users.js";
+import codeRouter from "./routes/code.js";
 import mongoose from "mongoose";
+import cors from "cors";
 
 var app = express();
 
 // Cors configurations
 app.use(logger("dev"));
 app.use(json());
-app.use(urlencoded({ extended: false }));
+app.use(urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
+    credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
 // Routers
 app.use("/", indexRouter);
-app.use("/users", usersRouter);
+app.use("/code", codeRouter);
 
 // Catch 404 and forward to error handler
-app.use((req, res, next) => {
-  next(createError(404));
+app.use((err, req, res, next) => {
+  console.error("Unhandled Error:", err.message);
+  res.status(500).json({ error: err.message });
 });
 
 // Error handler
