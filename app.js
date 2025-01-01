@@ -2,7 +2,6 @@ import express, { json, urlencoded } from "express";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
 import indexRouter from "./routes/index.js";
-import codeRouter from "./routes/code.js";
 import mongoose from "mongoose";
 import cors from "cors";
 
@@ -16,7 +15,7 @@ app.use(cookieParser());
 app.use(
   cors({
     origin: "http://localhost:3000",
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
   })
@@ -24,7 +23,6 @@ app.use(
 
 // Routers
 app.use("/", indexRouter);
-app.use("/code", codeRouter);
 
 // Catch 404 and forward to error handler
 app.use((err, req, res, next) => {
